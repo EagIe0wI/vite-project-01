@@ -1,0 +1,11 @@
+.active {
+	background: none;
+}
+
+.done {
+	background: greenyellow;
+}
+
+.expired {
+	background: crimson;
+}
