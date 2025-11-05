@@ -9,3 +9,7 @@
 .expired {
 	background: crimson;
 }
+
+input.error {
+	border-color: red;
+}

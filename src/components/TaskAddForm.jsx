@@ -4,6 +4,10 @@ const TaskAddForm = ({ addTask }) => {
 	const [userInput, setUserInput] = useState("");
 	const [deadline, setDeadline] = useState("");
 	const [hasDeadline, setHasDeadline] = useState(false);
+	const [hasErrors, setErrors] = useState({
+		input: false,
+		date: false,
+	});
 
 	const handleInput = (e) => {
 		setUserInput(e.target.value);
@@ -13,12 +17,29 @@ const TaskAddForm = ({ addTask }) => {
 		setDeadline(e.target.value);
 	};
 
-	const handleCheckboxClick = () => {
+	const handleCheckbox = () => {
 		setHasDeadline(!hasDeadline);
+	};
+
+	const validateErrors = () => {
+		const newErrors = {
+			input: false,
+			date: false,
+		};
+
+		if (userInput.length == 0) {
+			newErrors.input = true;
+		}
+		if (hasDeadline && deadline.length == 0) {
+			newErrors.date = true;
+		}
+		setErrors(newErrors);
+		return !newErrors.input && !newErrors.date;
 	};
 
 	const submitForm = (e) => {
 		e.preventDefault();
+		if (!validateErrors()) return;
 		addTask(userInput, deadline);
 		setUserInput("");
 		setDeadline("");
@@ -32,15 +53,19 @@ const TaskAddForm = ({ addTask }) => {
 				value={userInput}
 				placeholder="Enter new Task"
 				onChange={handleInput}
+				className={hasErrors.input ? "error" : ""}
 			/>
-			<input
-				type="checkbox"
-				id="deadline"
-				checked={hasDeadline}
-				onClick={handleCheckboxClick}
-			/>
-			<label htmlFor="deadline">add deadline </label>
-			{hasDeadline && <input type="date" value={deadline} onChange={handleData} />}
+			<input type="checkbox" id="deadline" checked={hasDeadline} onChange={handleCheckbox} />
+			{hasDeadline ? (
+				<input
+					type="date"
+					value={deadline}
+					onChange={handleData}
+					className={hasErrors.date ? "error" : ""}
+				/>
+			) : (
+				<label htmlFor="deadline">add deadline </label>
+			)}
 			<input type="submit" value="add" />
 		</form>
 	);

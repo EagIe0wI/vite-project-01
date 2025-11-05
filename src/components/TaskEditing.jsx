@@ -1,13 +1,11 @@
 import { useState } from "react";
 import styles from "./style.module.css";
 
-const Task = ({ text, deadline, removeTask, changeTask }) => {
+const Task = ({ text, deadline, changeTask }) => {
 	const [textFieldInput, setTextFieldInput] = useState("");
 	const [deadlineInput, setNewDeadline] = useState("");
 	const [editing, setEditingStatus] = useState(false);
-	const [hasDeadline, setHasDeadline] = useState(deadline.length > 0);
-	const [isComlited, setStatusComplited] = useState(false);
-	const [isExpired, setStatusExpired] = useState(false);
+	const [hasDeadline, setHasDeadline] = useState(false);
 	const [hasErrors, setErrors] = useState({
 		input: false,
 		date: false,
@@ -20,13 +18,12 @@ const Task = ({ text, deadline, removeTask, changeTask }) => {
 
 	const handleClickSaving = () => {
 		if (!validateErrors()) return;
-		setStatusComplited(!isComlited);
 		setEditingStatus(!editing);
 		changeTask(textFieldInput, deadlineInput);
 	};
 
 	const handleClickComplited = () => {
-		setStatusComplited(!isComlited);
+		setStatusComplited(!statusComlited);
 	};
 
 	const handleInput = (e) => {
@@ -41,12 +38,7 @@ const Task = ({ text, deadline, removeTask, changeTask }) => {
 		setNewDeadline(e.target.value);
 	};
 
-	const handleDeadline = (deadline) => {
-		const dateDeadline = new Date(deadline);
-		console.log(dateDeadline, dateDeadline - Date.now);
-		if (dateDeadline.length == 0) return;
-		if (dateDeadline - Date.now < 0) setStatusExpired(!isExpired);
-	};
+	const handleDeadline = () => {};
 
 	const validateErrors = () => {
 		const newErrors = {
@@ -66,7 +58,7 @@ const Task = ({ text, deadline, removeTask, changeTask }) => {
 
 	return (
 		<div>
-			<li className={isComlited ? styles.done : isExpired ? styles.expired : styles.active}>
+			<li className={statusComlited ? styles.done : styles.active}>
 				{editing ? (
 					<input
 						onChange={handleInput}
@@ -81,19 +73,15 @@ const Task = ({ text, deadline, removeTask, changeTask }) => {
 						<input
 							type="checkbox"
 							id="deadline"
-							checked={hasDeadline}
+							checked={hasDeadline} // deadline ? true : false
 							onChange={handleCheckbox}
 						/>
-						{hasDeadline ? (
-							<input
-								type="date"
-								onChange={handleDateInput}
-								value={deadline}
-								className={hasErrors.input ? "error" : ""}
-							/>
-						) : (
-							<label htmlFor="deadline">add deadline </label>
-						)}
+						<input
+							type="date"
+							onChange={handleDateInput}
+							value={deadlineInput}
+							className={hasErrors.input ? "error" : ""}
+						/>
 					</>
 				) : (
 					deadline && ` end in ${deadline}`
@@ -106,11 +94,7 @@ const Task = ({ text, deadline, removeTask, changeTask }) => {
 					<button onClick={handleClickSaving}>save</button>
 				</>
 			) : (
-				<>
-					<button onClick={handleClickComplited}>Done!</button>
-					<button onClick={handleClickEditing}>change</button>
-					<button onClick={removeTask}>delete</button>
-				</>
+				<button onClick={handleClickEditing}>change</button>
 			)}
 		</div>
 	);
