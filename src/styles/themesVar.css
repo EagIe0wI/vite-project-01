@@ -1,0 +1,9 @@
+.dark {
+	--mainBackgroundColor: black;
+	--mainFontColor: white;
+}
+
+.light {
+	--mainBackgroundColor: white;
+	--mainFontColor: black;
+}

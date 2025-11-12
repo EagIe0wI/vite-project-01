@@ -16,6 +16,7 @@ const Task = ({ text, deadline, removeTask, changeTask }) => {
 	const handleClickEditing = () => {
 		setEditingStatus(!editing);
 		setTextFieldInput(text);
+		setNewDeadline(date);
 	};
 
 	const handleClickSaving = () => {
