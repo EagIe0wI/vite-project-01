@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { v4 as uuid4 } from "uuid";
 import TasksList from "./TasksList.jsx";
 import TaskAddForm from "./TaskAddForm.jsx";
 
 const TasksMeneger = () => {
 	const [tasks, setTasks] = useState([]);
+	const [loading, setLoading] = useState(true);
 	// const [tags, setTags] = useState([]);
 
 	//работа с tasks
@@ -55,6 +56,21 @@ const TasksMeneger = () => {
 	// const removeTag = (id) => {
 	// 	setTags(tags.filter((tag) => id !== tag.id));
 	// };
+
+	useEffect(() => {
+		if (!loading) {
+			localStorage.setItem("tasks", JSON.stringify(tasks));
+			console.log("saved", tasks);
+		}
+	}, [tasks]);
+
+	useEffect(() => {
+		const data = localStorage.getItem("tasks");
+		console.log(data, typeof data);
+		if (data == "undefined") return;
+		setTasks(JSON.parse(data));
+		setLoading(false);
+	}, []);
 
 	return (
 		<div>
